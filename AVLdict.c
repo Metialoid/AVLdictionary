@@ -25,9 +25,9 @@ int height(Node*); //Done
 Node* rightRotate(Node*); //Done
 Node* leftRotate(Node*); //Done
 Node* insert(Node* ,char*); //Done
-Node* search(Node*,char*); //Done
-Node* findInorderPredecessor(Node*,char*);
-Node* findInorderSuccessor(Node*,char*);
+Node* Search(Node*,char*); //Done
+Node* findInorderPredecessor(Node*,char*);//Done
+Node* findInorderSuccessor(Node*,char*);//Done
 int countNodes(Node* ); //Done
 void freeTree(Node*); //Done
 void preprocessWord(char*); //Done
@@ -207,7 +207,7 @@ Node* insert(Node *node, char *data){
     return node;
 }
 
-Node *Search(Node *root, char *data){
+Node *Search (Node *root, char *data){
     Node *current_node = root;
     Node *last_visited = NULL;
     while (current_node != NULL)
@@ -221,7 +221,34 @@ Node *Search(Node *root, char *data){
     return last_visited;
 }
 
-// checkSpelling function to be implemented
+void checkSpelling(Node* root, char* data) {
+    Node* result = Search(root, data);
+    
+    if (result != NULL && strcasecmp(data, result->data) == 0) {
+        printf("'%s': Correct\n", data);
+    } else {
+        printf("'%s': Incorrect. Suggestions:\n", data);
+        
+        // The closest match is the node returned by Search
+        if (result) {
+            printf("A. %s\n", result->data);
+            
+            Node* predecessor = findInorderPredecessor(root, result->data);
+            if (predecessor) {
+                printf("B. %s\n", predecessor->data);
+            } else {
+                printf("B. (No predecessor available)\n");
+            }
+            
+            Node* successor = findInorderSuccessor(root, result->data);
+            if (successor) {
+                printf("C. %s\n", successor->data);
+            } else {
+                printf("C. (No successor available)\n");
+            }
+        }
+    }
+}
 
 void printTree(Node* root, int space) {
     if (root == NULL)
