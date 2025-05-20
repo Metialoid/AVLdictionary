@@ -34,7 +34,7 @@ void freeTree(Node*); //Done
 void preprocessWord(char*); //Done
 Node* loadDictionary(char* ); //Done
 void displayTreeStats(Node* ); //Done
-void checkSpelling(Node*,char*);
+void checkSpelling(Node*,char*); //Done
 void processSentence(Node* , char* ); //Done
 void printTree(Node* , int); //Done
 
@@ -51,7 +51,7 @@ int main(void)
     displayTreeStats(root);
     char sentence[MAX];
     while (1) {
-        printf("\nEnter a sentence to check (or type '0' to quit): ");
+        printf("\nEnter a sentence to check (or 0 to EXIT): ");
         if (fgets(sentence, MAX, stdin) == NULL) {
             break;
         }
@@ -141,9 +141,7 @@ int getBalance(Node *n)
 
 int tree_max(int a, int b)
 {
-    if(a > b)
-        return a;
-    return b;
+    return (a > b) ? a : b;
 }
 
 int height(Node *n){
@@ -183,16 +181,11 @@ Node *leftRotate(Node *x){
 Node *insert(Node *node, char *data){
     if (node == NULL) return newNode(data);
     int compare_value = strcasecmp(data, node->data);
-    
     if (compare_value < 0) node->left = insert(node->left, data);
     else if (compare_value > 0) node->right = insert(node->right, data);
     else return node;
-
-    
     node->height = 1 + tree_max(height(node->left), height(node->right));
-    
     int balance = getBalance(node);
-
     if (balance > 1 && strcasecmp(data, node->left->data) < 0) 
     return rightRotate(node);
     if (balance < -1 && strcasecmp(data, node->right->data) > 0) 
@@ -226,7 +219,6 @@ Node *Search (Node *root, char *data){
 
 void checkSpelling(Node* root, char* data) {
     Node* result = Search(root, data);
-    
     if (result != NULL && strcasecmp(data, result->data) == 0) {
         printf("'%s': Correct\n", data);
     } else {
@@ -252,16 +244,12 @@ void checkSpelling(Node* root, char* data) {
 void printTree(Node* root, int space) {
     if (root == NULL)
         return;
-
     space += COUNT;
-
     printTree(root->right, space);
-
     printf("\n");
     for (int i = COUNT; i < space; i++)
         printf(" ");
     printf("%s\n", root->data);
-
     printTree(root->left, space);
 }
 
@@ -271,6 +259,7 @@ Node *rightnode(Node* root) {
     }
     return root;
 }	
+
 Node *leftnode(Node* root) {
     while (root->left != NULL) {
         root = root->left;
