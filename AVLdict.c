@@ -12,6 +12,43 @@ typedef struct Node
     int height;
 }Node;
 
+Node* createNode(char*);
+int getHeight(Node*);
+int getBalance(Node*);
+int max(int ,int);
+void updateHeight(Node*);
+Node* rightRotate(Node*);
+Node* leftRotate(Node*);
+Node* insert(Node* ,char*);
+Node* search(Node*,char*,Node*);
+Node* findInorderPredecessor(Node*,char*);
+Node* findInorderSuccessor(Node*,char*);
+int countNodes(Node* );
+void freeTree(Node*);
+void preprocessWord(char*);
+Node* loadDictionary(char* );
+void displayTreeStats(Node* );
+void checkSpelling(Node*,char*);
+void processSentence(Node* , char* );
+void printTree(Node* , int);
+
+void main(){
+    Node *root = NULL;
+    char *arr[] = {"hello", "world", "hi", "avl"};
+    for (int i = 0; i < 4; i++)
+    {
+        root = insert(root, arr[i]);
+    }
+    printTree(root, 0); 
+    //FILE *fptr = fopen("Dictionary.txt", "r");
+    //fclose(fptr);
+}
+
+int getBalance(Node *n){
+    if (n == NULL) return 0;
+    return height(n->left) - height(n->right);
+}
+
 int max(int a, int b){
     return (a > b) ? a : b;
 }
@@ -50,11 +87,6 @@ Node *leftRotate(Node *x){
     return y;
 }
 
-int getBalance(Node *n){
-    if (n == NULL) return 0;
-    return height(n->left) - height(n->right);
-}
-
 Node *insert(Node *node, char *data){
     if (node == NULL) return newNode(data);
     int compare_value = strcasecmp(data, node->data);
@@ -83,33 +115,6 @@ Node *insert(Node *node, char *data){
     return node;
 }
 
-void PreOrder(Node *root){
-    if (root)
-    {
-        printf("%s ", root->data);
-        PreOrder(root->left);
-        PreOrder(root->right);
-    }
-}
-
-void InOrder(Node *root){
-    if (root)
-    {
-        InOrder(root->left);
-        printf("%s ", root->data);
-        InOrder(root->right);
-    }
-}
-
-void PostOrder(Node *root){
-    if (root)
-    {
-        PostOrder(root->left);
-        PostOrder(root->right);
-        printf("%s ", root->data);
-    }
-}
-
 Node *Search(Node *root, char *key){
     if (root == NULL) return NULL;
     
@@ -136,48 +141,3 @@ void printTree(Node* root, int space) {
     printTree(root->left, space);
 }
 
-void main(){
-    clock_t start, end; 
-    double cpu_time_used; 
- 
-    start = clock(); 
-
-    Node *root = NULL;
-    char *arr[] = {"hello", "world", "hi", "avl"};
-    for (int i = 0; i < 4; i++)
-    {
-        root = insert(root, arr[i]);
-    }
-    
-    printTree(root, 0);
-    
-    end = clock(); 
-    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC; 
- 
-    printf("\nCPU time used: %f seconds\n", cpu_time_used);
-    
- 
-    //FILE *fptr = fopen("Dictionary.txt", "r");
-    //fclose(fptr);
-}
-
-/*
-AVLNode* createNode(const char* word);
-int getHeight(AVLNode* node);
-int getBalanceFactor(AVLNode* node);
-int max(int a, int b);
-void updateHeight(AVLNode* node);
-AVLNode* rightRotate(AVLNode* y);
-AVLNode* leftRotate(AVLNode* x);
-AVLNode* insert(AVLNode* root, const char* word);
-AVLNode* search(AVLNode* root, const char* word, AVLNode** lastNode);
-AVLNode* findInorderPredecessor(AVLNode* root, const char* word);
-AVLNode* findInorderSuccessor(AVLNode* root, const char* word);
-int countNodes(AVLNode* root);
-void freeTree(AVLNode* root);
-void preprocessWord(char* word);
-AVLNode* loadDictionary(const char* filename);
-void displayTreeStats(AVLNode* root);
-void checkSpelling(AVLNode* root, const char* word);
-void processSentence(AVLNode* root, char* sentence);
-*/
