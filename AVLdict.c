@@ -166,3 +166,24 @@ void main(){
     //FILE *fptr = fopen("Dictionary.txt", "r");
     //fclose(fptr);
 }
+
+/*
+AVLNode* createNode(const char* word);
+int getHeight(AVLNode* node);
+int getBalanceFactor(AVLNode* node);
+int max(int a, int b);
+void updateHeight(AVLNode* node);
+AVLNode* rightRotate(AVLNode* y);
+AVLNode* leftRotate(AVLNode* x);
+AVLNode* insert(AVLNode* root, const char* word);
+AVLNode* search(AVLNode* root, const char* word, AVLNode** lastNode);
+AVLNode* findInorderPredecessor(AVLNode* root, const char* word);
+AVLNode* findInorderSuccessor(AVLNode* root, const char* word);
+int countNodes(AVLNode* root);
+void freeTree(AVLNode* root);
+void preprocessWord(char* word);
+AVLNode* loadDictionary(const char* filename);
+void displayTreeStats(AVLNode* root);
+void checkSpelling(AVLNode* root, const char* word);
+void processSentence(AVLNode* root, char* sentence);
+*/
