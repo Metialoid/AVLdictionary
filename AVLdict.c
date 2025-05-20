@@ -63,9 +63,6 @@ Node *insert(Node *node, char *data){
     else if (compare_value > 0) node->right = insert(node->right, data);
     else return node;
 
-    /* if (data < node->data) node->left = insert(node->left, data);
-    else if (data > node->data) node->right = insert(node->right, data);
-    else return node; */
     
     node->height = 1 + max(height(node->left), height(node->right));
     
@@ -121,9 +118,6 @@ Node *Search(Node *root, char *key){
     else return Search(root->right, key);
     
     
-    /* if (root->data == val) return root;
-    else if (val < root->data) return Search(root->left, val);
-    else return Search(root->right, val); */
 }
 
 void printTree(Node* root, int space) {
