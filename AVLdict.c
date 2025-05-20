@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <time.h>
+
 #define COUNT 5
 #define MAX 100
+
 typedef struct Node
 {
     char data[MAX];
@@ -13,7 +14,7 @@ typedef struct Node
 }Node;
 
 Node* createNode(char*);
-int getHeight(Node*);
+int height(Node*);
 int getBalance(Node*);
 int max(int ,int);
 void updateHeight(Node*);
