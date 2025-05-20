@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
-#include <time.h>
+#include <ctype.h>
 #define COUNT 5
 #define MAX 100
+/* Platform-specific includes and definitions */
+#ifdef _WIN32
+    #define strncasecmp _strnicmp
+    #define strcasecmp _stricmp
+#else
+    #include <strings.h>  /* For strncasecmp on UNIX/Linux */
+#endif
 typedef struct Node
 {
     char data[MAX];
@@ -12,26 +18,27 @@ typedef struct Node
     int height;
 }Node;
 
-Node* createNode(char*); //Done
+int tree_max(int, int); //Done
+Node* newNode(char*); //Done
 int getBalance(Node*); //Done
-int max(int ,int); //Done
 int height(Node*); //Done
 Node* rightRotate(Node*); //Done
 Node* leftRotate(Node*); //Done
 Node* insert(Node* ,char*); //Done
-Node* search(Node*,char*,Node*); //Done
+Node* search(Node*,char*); //Done
 Node* findInorderPredecessor(Node*,char*);
 Node* findInorderSuccessor(Node*,char*);
 int countNodes(Node* ); //Done
 void freeTree(Node*); //Done
-void preprocessWord(char*);
+void preprocessWord(char*); //Done
 Node* loadDictionary(char* ); //Done
-void displayTreeStats(Node* );
-void checkSpelling(Node*,char*);
-void processSentence(Node* , char* );
-void printTree(Node* , int);
+void displayTreeStats(Node* ); //Done
+void checkSpelling(Node*,char*); 
+void processSentence(Node* , char* ); //Done
+void printTree(Node* , int); //Done
 
-void main(){
+void main()
+{
     Node *root = NULL;
     char *arr[] = {"hello", "world", "hi", "avl"};
     for (int i = 0; i < 4; i++)
@@ -47,6 +54,21 @@ void main(){
         exit(1);
     }
     displayTreeStats(root);
+    char sentence[MAX];
+    while (1) {
+        printf("\nEnter a sentence to check (or type '0' to quit): ");
+        if (fgets(sentence, MAX, stdin) == NULL) {
+            break;
+        }
+        if (strncasecmp(sentence, "0",1) == 0 && 
+            (sentence[1] == '\n' || sentence[1] == '\0')) {
+                printf("GoodBye\n");
+            break;
+        }
+        
+        processSentence(root, sentence);
+    }
+    freeTree(root);
 }
 
 int countNodes(Node *root) {
@@ -60,11 +82,38 @@ void displayTreeStats(Node* root) {
     printf("Tree height: %d\n",height(root));
 }
 
+void processSentence(Node* root, char *sentence) {
+    char* token = strtok(sentence, " \t\n\r.,;:!?\"'()[]{}");
+    while (token != NULL) {
+        char processed_word[MAX];
+        strncpy(processed_word, token, MAX);
+        processed_word[MAX - 1] = '\0';
+        preprocessWord(processed_word);
+        
+        if (strlen(processed_word) > 0) {
+            checkSpelling(root, processed_word);
+        }
+        token = strtok(NULL," \t\n\r.,;:!?\"'()[]{}");
+    }
+}
+
+void preprocessWord(char* word) 
+{
+    int i = 0, j = 0;
+    while (word[i]) {
+        if (isalnum((char)word[i])) {
+            word[j++] = tolower((char)word[i]);
+        }
+        i++;
+    }
+    word[j] = '\0';
+}
+
 Node *loadDictionary(char *dict){
     char word[MAX];
     Node *root = NULL;
     FILE *fp = fopen(dict, "r");
-    if (dict == NULL)
+    if (fp == NULL)
     {
         printf("Failed to open dictionary file: %s\n", dict);
         return NULL;
@@ -86,8 +135,11 @@ int getBalance(Node *n)
     return height(n->left) - height(n->right);
 }
 
-int max(int a, int b){
-    return (a > b) ? a : b;
+int tree_max(int a, int b)
+{
+    if(a > b)
+        return a;
+    return b;
 }
 
 int height(Node *n){
@@ -104,13 +156,13 @@ Node *newNode(char *data){
     return node;
 }
 
-Node *rightrotate(Node *y){
+Node *rightRotate(Node *y){
     Node *x = y->left;
     Node *T2 = x->right;
     x->right = y;
     y->left = T2;
-    y->height = max(height(y->left), height(y->right)) + 1;
-    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = tree_max(height(y->left), height(y->right)) + 1;
+    x->height = tree_max(height(x->left), height(x->right)) + 1;
     return x;
 }
 
@@ -119,12 +171,12 @@ Node *leftRotate(Node *x){
     Node *T2 = y->left;
     y->left = x;
     x->right = T2;
-    x->height = max(height(x->left), height(x->right)) + 1;
-    y->height = max(height(y->left), height(y->right)) + 1;    
+    x->height = tree_max(height(x->left), height(x->right)) + 1;
+    y->height = tree_max(height(y->left), height(y->right)) + 1;    
     return y;
 }
 
-Node *insert(Node *node, char *data){
+Node* insert(Node *node, char *data){
     if (node == NULL) return newNode(data);
     int compare_value = strcasecmp(data, node->data);
     
@@ -133,34 +185,38 @@ Node *insert(Node *node, char *data){
     else return node;
 
     
-    node->height = 1 + max(height(node->left), height(node->right));
+    node->height = 1 + tree_max(height(node->left), height(node->right));
     
     int balance = getBalance(node);
 
-    if (balance > 1 && strcasecmp(data, node->left->data) < 0) return rightrotate(node);
-    if (balance < -1 && strcasecmp(data, node->right->data) > 0) return leftRotate(node);
+    if (balance > 1 && strcasecmp(data, node->left->data) < 0) 
+    return rightRotate(node);
+    if (balance < -1 && strcasecmp(data, node->right->data) > 0) 
+    return leftRotate(node);
     if (balance > 1 && strcasecmp(data, node->left->data) > 0)
     {
         node->left = leftRotate(node->left);
-        return rightrotate(node);
+        return rightRotate(node);
     }
     if (balance < -1 && strcasecmp(data, node->right->data) < 0)
     {
-        node->right = rightrotate(node->right);
+        node->right = rightRotate(node->right);
         return leftRotate(node);
     }
     return node;
 }
 
-Node *Search(Node *root, char *key){
+Node* search(Node *root, char *key){
     if (root == NULL) return NULL;
     
-    if (strcasecmp(root->data, key) == 0) return root;
-    else if (strcasecmp(root->data, key) < 0) return Search(root->left, key);
-    else return Search(root->right, key);
+    int compare = strcasecmp(key, root->data);
     
-    
+    if (compare == 0) return root;
+    else if (compare < 0) return search(root->left, key);
+    else return search(root->right, key);
 }
+
+// checkSpelling function to be implemented
 
 void printTree(Node* root, int space) {
     if (root == NULL)
