@@ -11,6 +11,7 @@
 #else
     #include <strings.h>  /* For strncasecmp on UNIX/Linux */
 #endif
+
 typedef struct Node
 {
     char data[MAX];
@@ -32,8 +33,8 @@ int countNodes(Node* ); //Done
 void freeTree(Node*); //Done
 void preprocessWord(char*); //Done
 Node* loadDictionary(char* ); //Done
-void displayTreeStats(Node* ); //Done //Done
-void checkSpelling(Node*,char*); 
+void displayTreeStats(Node* ); //Done
+void checkSpelling(Node*,char*);
 void processSentence(Node* , char* ); //Done
 void printTree(Node* , int); //Done
 
@@ -66,7 +67,6 @@ void main()
                 printf("GoodBye\n");
             break;
         }
-        
         processSentence(root, sentence);
     }
     freeTree(root);
@@ -228,18 +228,14 @@ void checkSpelling(Node* root, char* data) {
         printf("'%s': Correct\n", data);
     } else {
         printf("'%s': Incorrect. Suggestions:\n", data);
-        
-        // The closest match is the node returned by Search
         if (result) {
             printf("A. %s\n", result->data);
-            
             Node* predecessor = findInorderPredecessor(root, result->data);
             if (predecessor) {
                 printf("B. %s\n", predecessor->data);
             } else {
                 printf("B. (No predecessor available)\n");
             }
-            
             Node* successor = findInorderSuccessor(root, result->data);
             if (successor) {
                 printf("C. %s\n", successor->data);
@@ -289,8 +285,8 @@ Node *leftnode(Node* root) {
 }
 
 Node* findInorderPredecessor(Node *root, char *data){
-    if (root == NULL) return NULL;
-    
+    if (root == NULL) 
+    return NULL;
     Node *predecessor = NULL;
     Node *current = root;
     while (current != NULL)
