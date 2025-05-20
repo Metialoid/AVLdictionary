@@ -14,7 +14,7 @@ typedef struct Node
 }Node;
 
 Node* createNode(char*);
-int height(Node*);
+int getHeight(Node*);
 int getBalance(Node*);
 int max(int ,int);
 void updateHeight(Node*);
@@ -24,10 +24,10 @@ Node* insert(Node* ,char*);
 Node* search(Node*,char*,Node*);
 Node* findInorderPredecessor(Node*,char*);
 Node* findInorderSuccessor(Node*,char*);
-int countNodes(Node* );
-void freeTree(Node*);
+int countNodes(Node* ); //Done
+void freeTree(Node*); //Done
 void preprocessWord(char*);
-Node* loadDictionary(char* );
+Node* loadDictionary(char* ); //Done
 void displayTreeStats(Node* );
 void checkSpelling(Node*,char*);
 void processSentence(Node* , char* );
@@ -41,11 +41,49 @@ void main(){
         root = insert(root, arr[i]);
     }
     printTree(root, 0); 
-    //FILE *fptr = fopen("Dictionary.txt", "r");
-    //fclose(fptr);
+    char *dict= "dictionary.txt";
+    root = loadDictionary(dict);
+    if (root == NULL)
+    {
+        printf("Failed to load dictionary.\n");
+        exit(1);
+    }
+    displayTreeStats(root);
 }
 
-int getBalance(Node *n){
+int countNodes(Node *root) {
+    if (root == NULL) return 0;
+    return 1 + countNodes(root->left) + countNodes(root->right);
+}
+
+void displayTreeStats(Node* root) {
+    printf("Dictionary loaded!\n");
+    printf("Tree size: %d\n", countNodes(root));
+    printf("Tree height: %d\n",height(root));
+}
+
+Node *loadDictionary(char *dict){
+    char word[MAX];
+    Node *root = NULL;
+    FILE *fp = fopen(dict, "r");
+    if (dict == NULL)
+    {
+        printf("Failed to open dictionary file: %s\n", dict);
+        return NULL;
+    }
+    while(fgets(word,MAX,fp)){
+        word[strcspn(word, "\r\n")] = 0;
+        if (strlen(word) > 0)
+        {
+            root = insert(root, word);
+        }
+    }
+    fclose(fp);
+    return root;
+}
+
+int getBalance(Node *n)
+{
     if (n == NULL) return 0;
     return height(n->left) - height(n->right);
 }
@@ -142,3 +180,10 @@ void printTree(Node* root, int space) {
     printTree(root->left, space);
 }
 
+void freeTree(Node* root) {
+    if (root != NULL) {
+        freeTree(root->left);
+        freeTree(root->right);
+        free(root);
+    }
+}
