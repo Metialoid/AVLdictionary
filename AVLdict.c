@@ -14,21 +14,21 @@ typedef struct Node
 }Node;
 
 Node* createNode(char*);
-int getHeight(Node*);
+int height(Node*);
 int getBalance(Node*);
 int max(int ,int);
 void updateHeight(Node*);
 Node* rightRotate(Node*);
 Node* leftRotate(Node*);
 Node* insert(Node* ,char*);
-Node* search(Node*,char*,Node*);
+Node* search(Node*,char*); //Done
 Node* findInorderPredecessor(Node*,char*);
 Node* findInorderSuccessor(Node*,char*);
 int countNodes(Node* ); //Done
 void freeTree(Node*); //Done
 void preprocessWord(char*);
 Node* loadDictionary(char* ); //Done
-void displayTreeStats(Node* );
+void displayTreeStats(Node* ); //Done
 void checkSpelling(Node*,char*);
 void processSentence(Node* , char* );
 void printTree(Node* , int);
@@ -41,6 +41,7 @@ void main(){
         root = insert(root, arr[i]);
     }
     printTree(root, 0); 
+    Node *searchvalue = search(root, "avl");
     char *dict= "dictionary.txt";
     root = loadDictionary(dict);
     if (root == NULL)
@@ -154,14 +155,23 @@ Node *insert(Node *node, char *data){
     return node;
 }
 
-Node *Search(Node *root, char *key){
-    if (root == NULL) return NULL;
+Node *Search(Node *root, char *data){
+    /* if (root == NULL) return NULL;
     
     if (strcasecmp(root->data, key) == 0) return root;
     else if (strcasecmp(root->data, key) < 0) return Search(root->left, key);
-    else return Search(root->right, key);
-    
-    
+    else return Search(root->right, key); */
+    Node *current_node = root;
+    Node *last_visited = NULL;
+    while (current_node != NULL)
+    {
+        last_visited = current_node;
+        int compare = strcasecmp(data, current_node->data);
+        if (compare == 0) return current_node;
+        else if (compare < 0) current_node = current_node->left;
+        else current_node = current_node->right;
+    }
+    return last_visited;
 }
 
 void printTree(Node* root, int space) {
@@ -186,4 +196,47 @@ void freeTree(Node* root) {
         freeTree(root->right);
         free(root);
     }
+}
+
+Node *rightnode(Node* root) {
+    while (root->right != NULL) {
+        root = root->right;
+    }
+    return root;
+}	
+Node *leftMost(Node* root) {
+    struct Node *current = root;
+    while (current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
+
+Node* findInorderPredecessor(Node *root, char *data){
+    if (root == NULL) return NULL;
+    
+    Node *predecessor = NULL;
+    Node *current = root;
+    while (current != NULL)
+    {
+        if (strcasecmp(data, current->data) > 0)
+        {
+            predecessor = current;
+            current = current->right;
+        }
+        else if (strcasecmp(data, current->data) < 0)
+        {
+            current = current->left;
+        }
+        else
+        {
+            if (current->left != NULL) return rightnode(current->left);
+        }
+        break;
+    }
+    return predecessor;
+}
+
+Node *findInorderSuccessor(Node *root, char *data){
+    if (root == NULL) return NULL;
 }
