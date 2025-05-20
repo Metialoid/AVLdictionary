@@ -81,8 +81,12 @@ int countNodes(Node *root) {
 }
 
 void displayTreeStats(Node* root) {
-    printf("Dictionary loaded!\n");
+    printf("Dictionary loaded Successfully!\n");
+    printf("..........................................................\n");
+    printf("AVL Tree Data\n");
+    printf("..........................................................\n");
     printf("Tree size: %d\n", countNodes(root));
+    printf("..........................................................\n");
     printf("Tree height: %d",height(root));
 }
 
@@ -219,23 +223,26 @@ Node *Search (Node *root, char *data){
 
 void checkSpelling(Node* root, char* data) {
     Node* result = Search(root, data);
-    if (result != NULL && strcasecmp(data, result->data) == 0) {
-        printf("'%s': Correct\n", data);
-    } else {
-        printf("'%s': Incorrect. Suggestions:\n", data);
+    if (result != NULL && strcasecmp(data, result->data) == 0) 
+    {
+        printf("'%s': Correct", data);
+    } 
+    else 
+    {
+        printf("\n'%s'-- Incorrect, Suggestions:", data);
         if (result) {
-            printf("A. %s\n", result->data);
+            printf(" %s ", result->data);
             Node* predecessor = findInorderPredecessor(root, result->data);
             if (predecessor) {
-                printf("B. %s\n", predecessor->data);
+                printf(" %s ", predecessor->data);
             } else {
-                printf("B. (No predecessor available)\n");
+                printf(" (No predecessor available) ");
             }
             Node* successor = findInorderSuccessor(root, result->data);
             if (successor) {
-                printf("C. %s\n", successor->data);
+                printf(" %s ", successor->data);
             } else {
-                printf("C. (No successor available)\n");
+                printf(" (No successor available) ");
             }
         }
     }
