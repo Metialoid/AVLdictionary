@@ -177,7 +177,7 @@ Node *leftRotate(Node *x){
     return y;
 }
 
-Node* insert(Node *node, char *data){
+Node *insert(Node *node, char *data){
     if (node == NULL) return newNode(data);
     int compare_value = strcasecmp(data, node->data);
     
@@ -281,14 +281,13 @@ Node *rightnode(Node* root) {
     return root;
 }	
 Node *leftnode(Node* root) {
-    struct Node *current = root;
-    while (current->left != NULL) {
-        current = current->left;
+    while (root->left != NULL) {
+        root = root->left;
     }
-    return current;
+    return root;
 }
 
-Node* findInorderPredecessor(Node *root, char *data){
+Node *findInorderPredecessor(Node *root, char *data){
     if (root == NULL) return NULL;
     
     Node *predecessor = NULL;
@@ -307,10 +306,10 @@ Node* findInorderPredecessor(Node *root, char *data){
         else
         {
             if (current->left != NULL) return rightnode(current->left);
+            else return predecessor;
         }
-        break;
     }
-    return predecessor;
+    return NULL;
 }
 
 Node *findInorderSuccessor(Node *root, char *data){
@@ -327,7 +326,16 @@ Node *findInorderSuccessor(Node *root, char *data){
             successor = current;
             current = current->left;
         }
-        else if (strcasecmp(data, current->data) >= 0) current = current->right;
+        else if (strcasecmp(data, current->data) > 0) current = current->right;
+        else
+        {
+            if (current->right)
+            {
+                return leftnode(current->right);
+            }
+            else return successor;
+        }
+        
     }
-    return successor;
+    return NULL;
 }
