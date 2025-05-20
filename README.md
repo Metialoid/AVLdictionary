@@ -1,1 +1,1 @@
-#FULL Functional Spelling Check Dictionary using C
+FULL Functional Spelling Check Dictionary using C
