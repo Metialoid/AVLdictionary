@@ -13,7 +13,7 @@ typedef struct Node
     int height;
 }Node;
 
-Node* createNode(char*);
+Node *createNode(char*);
 int height(Node*);
 int getBalance(Node*);
 int max(int ,int);
@@ -21,7 +21,7 @@ void updateHeight(Node*);
 Node* rightRotate(Node*);
 Node* leftRotate(Node*);
 Node* insert(Node* ,char*);
-Node* search(Node*,char*); //Done
+Node* Search(Node*,char*); //Done
 Node* findInorderPredecessor(Node*,char*);
 Node* findInorderSuccessor(Node*,char*);
 int countNodes(Node* ); //Done
@@ -41,7 +41,7 @@ void main(){
         root = insert(root, arr[i]);
     }
     printTree(root, 0); 
-    Node *searchvalue = search(root, "avl");
+    Node *searchvalue = Search(root, "avl");
     char *dict= "dictionary.txt";
     root = loadDictionary(dict);
     if (root == NULL)
@@ -156,11 +156,6 @@ Node *insert(Node *node, char *data){
 }
 
 Node *Search(Node *root, char *data){
-    /* if (root == NULL) return NULL;
-    
-    if (strcasecmp(root->data, key) == 0) return root;
-    else if (strcasecmp(root->data, key) < 0) return Search(root->left, key);
-    else return Search(root->right, key); */
     Node *current_node = root;
     Node *last_visited = NULL;
     while (current_node != NULL)
@@ -204,7 +199,7 @@ Node *rightnode(Node* root) {
     }
     return root;
 }	
-Node *leftMost(Node* root) {
+Node *leftnode(Node* root) {
     struct Node *current = root;
     while (current->left != NULL) {
         current = current->left;
@@ -239,4 +234,19 @@ Node* findInorderPredecessor(Node *root, char *data){
 
 Node *findInorderSuccessor(Node *root, char *data){
     if (root == NULL) return NULL;
+    
+    if (strcasecmp(root->data, data) == 0 && root->right != NULL) return leftnode(root->right);
+    
+    Node *successor = NULL;
+    Node *current = root;
+    while (current != NULL)
+    {
+        if (strcasecmp(data, current->data) < 0)
+        {
+            successor = current;
+            current = current->left;
+        }
+        else if (strcasecmp(data, current->data) >= 0) current = current->right;
+    }
+    return successor;
 }
