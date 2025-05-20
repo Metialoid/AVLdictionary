@@ -38,16 +38,9 @@ void checkSpelling(Node*,char*);
 void processSentence(Node* , char* ); //Done
 void printTree(Node* , int); //Done
 
-void main()
+int main(void)
 {
     Node *root = NULL;
-    char *arr[] = {"hello", "world", "hi", "avl"};
-    for (int i = 0; i < 4; i++)
-    {
-        root = insert(root, arr[i]);
-    }
-    printTree(root, 0); 
-    Node *searchvalue = Search(root, "avl");
     char *dict= "dictionary.txt";
     root = loadDictionary(dict);
     if (root == NULL)
@@ -70,6 +63,16 @@ void main()
         processSentence(root, sentence);
     }
     freeTree(root);
+    return 0;
+}
+
+void freeTree(Node* root) 
+{
+    if (root != NULL) {
+        freeTree(root->left);
+        freeTree(root->right);
+        free(root);
+    }
 }
 
 int countNodes(Node *root) {
@@ -80,7 +83,7 @@ int countNodes(Node *root) {
 void displayTreeStats(Node* root) {
     printf("Dictionary loaded!\n");
     printf("Tree size: %d\n", countNodes(root));
-    printf("Tree height: %d\n",height(root));
+    printf("Tree height: %d",height(root));
 }
 
 void processSentence(Node* root, char *sentence) {
@@ -177,7 +180,7 @@ Node *leftRotate(Node *x){
     return y;
 }
 
-Node* insert(Node *node, char *data){
+Node *insert(Node *node, char *data){
     if (node == NULL) return newNode(data);
     int compare_value = strcasecmp(data, node->data);
     
@@ -262,14 +265,6 @@ void printTree(Node* root, int space) {
     printTree(root->left, space);
 }
 
-void freeTree(Node* root) {
-    if (root != NULL) {
-        freeTree(root->left);
-        freeTree(root->right);
-        free(root);
-    }
-}
-
 Node *rightnode(Node* root) {
     while (root->right != NULL) {
         root = root->right;
@@ -277,14 +272,13 @@ Node *rightnode(Node* root) {
     return root;
 }	
 Node *leftnode(Node* root) {
-    struct Node *current = root;
-    while (current->left != NULL) {
-        current = current->left;
+    while (root->left != NULL) {
+        root = root->left;
     }
-    return current;
+    return root;
 }
 
-Node* findInorderPredecessor(Node *root, char *data){
+Node *findInorderPredecessor(Node *root, char *data){
     if (root == NULL) 
     return NULL;
     Node *predecessor = NULL;
@@ -302,18 +296,19 @@ Node* findInorderPredecessor(Node *root, char *data){
         }
         else
         {
-            if (current->left != NULL) return rightnode(current->left);
+            if (current->left != NULL) 
+            return rightnode(current->left);
+            else 
+            return predecessor;
         }
-        break;
     }
-    return predecessor;
+    return NULL;
 }
 
 Node *findInorderSuccessor(Node *root, char *data){
-    if (root == NULL) return NULL;
-    
+    if (root == NULL) 
+    return NULL;
     if (strcasecmp(root->data, data) == 0 && root->right != NULL) return leftnode(root->right);
-    
     Node *successor = NULL;
     Node *current = root;
     while (current != NULL)
@@ -323,7 +318,16 @@ Node *findInorderSuccessor(Node *root, char *data){
             successor = current;
             current = current->left;
         }
-        else if (strcasecmp(data, current->data) >= 0) current = current->right;
+        else if (strcasecmp(data, current->data) > 0) current = current->right;
+        else
+        {
+            if (current->right)
+            {
+                return leftnode(current->right);
+            }
+            else return successor;
+        }
+        
     }
-    return successor;
+    return NULL;
 }
