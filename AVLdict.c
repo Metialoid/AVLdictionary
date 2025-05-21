@@ -225,7 +225,7 @@ void checkSpelling(Node* root, char* data) {
     Node* result = Search(root, data);
     if (result != NULL && strcasecmp(data, result->data) == 0) 
     {
-        printf("'%s': Correct", data);
+        printf("\n'%s': Correct", data);
     } 
     else 
     {
