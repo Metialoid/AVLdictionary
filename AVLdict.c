@@ -1,9 +1,21 @@
+/*
+    * AVL Tree Dictionary
+    * This program implements an AVL tree to store and check the spelling of words.
+    * It reads a dictionary file, builds the AVL tree, and allows users to input sentences
+    * to check for spelling errors.
+    * The program also provides suggestions for incorrect words based on the AVL tree structure.\
+This program is programmed by
+    * Yassin Khaled Ibrahim - 9610
+    * Aly El-din Mohamed - 9444
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #define COUNT 5
 #define MAX 100
+
 /* Platform-specific includes and definitions */
 #ifdef _WIN32
     #define strncasecmp _strnicmp
