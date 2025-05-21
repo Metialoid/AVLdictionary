@@ -68,7 +68,8 @@ int main(void)
 
 void freeTree(Node* root) 
 {
-    if (root != NULL) {
+    if (root != NULL) 
+    {
         freeTree(root->left);
         freeTree(root->right);
         free(root);
